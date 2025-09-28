@@ -1,0 +1,7 @@
+{
+    "functions": {
+        "api/marcus.js": {
+            "maxDuration": 30
+        }
+    }
+}
