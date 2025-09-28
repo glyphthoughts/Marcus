@@ -446,8 +446,6 @@
             chatMessages.scrollTop = chatMessages.scrollHeight;
             return messageDiv;
         }
-
-        // ✅ THINKING DOTS - SEPARATE FROM MESSAGE
         function showTypingIndicator() {
             if (isTyping) return;
             isTyping = true;
@@ -464,8 +462,6 @@
             `;
             chatMessages.appendChild(typingDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
-
-            // ✅ DISABLE USER INPUT COMPLETELY
             const randomText = marcusTypingTexts[Math.floor(Math.random() * marcusTypingTexts.length)];
             chatInput.placeholder = randomText;
             chatInput.disabled = true;
@@ -479,13 +475,11 @@
             }
             isTyping = false;
 
-            // ✅ RE-ENABLE USER INPUT
             chatInput.placeholder = "Type your message here...";
             chatInput.disabled = false;
             sendButton.disabled = false;
         }
 
-        // ✅ FIXED: No more ID collision - Direct element reference
         function createTypingMessage(className = 'bot') {
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${className}`;
@@ -496,7 +490,6 @@
             chatMessages.appendChild(messageDiv);
             chatMessages.scrollTop = chatMessages.scrollHeight;
 
-            // ✅ RETURN DIRECT REFERENCE (no ID needed)
             return messageDiv.querySelector('.typing-text');
         }
 
@@ -511,7 +504,6 @@
                         chatMessages.scrollTop = chatMessages.scrollHeight;
                         setTimeout(typeChar, 20);
                     } else {
-                        // ✅ REMOVE CURSOR AFTER TYPING COMPLETE
                         typingElement.className = '';
                         resolve();
                     }
@@ -528,7 +520,6 @@
             chatInput.value = '';
         }
 
-        // ✅ UPDATED FOR RAILWAY: Backend API call instead of direct Gemini
         async function getBotResponse(userMessage) {
             try {
                 console.log('🔍 Calling Marcus backend API...');
@@ -563,12 +554,8 @@
         async function sendMessage() {
             const message = chatInput.value.trim();
             if (message === '' || isTyping) return;
-
-            // Add user message
             addMessage(message, 'user');
             chatInput.value = '';
-
-            // ✅ OPTIMIZED SEQUENCE FOR RAILWAY BACKEND
             setTimeout(async () => {
                 showTypingIndicator();
 
@@ -576,7 +563,6 @@
                     const response = await getBotResponse(message);
                     hideTypingIndicator();
 
-                    // ✅ CREATE NEW MESSAGE BOX THEN TYPE INSIDE IT
                     const typingElement = createTypingMessage('bot');
                     await typeTextInMessage(response, typingElement);
 
@@ -588,7 +574,6 @@
             }, 800);
         }
 
-        // Event listeners
         sendButton.addEventListener('click', sendMessage);
         clearButton.addEventListener('click', clearConversation);
 
@@ -597,15 +582,12 @@
                 sendMessage();
             }
         });
-
-        // ✅ BLOCK ALL INPUT WHEN DISABLED
         chatInput.addEventListener('keydown', function (e) {
             if (chatInput.disabled) {
                 e.preventDefault();
             }
         });
 
-        // Initialize on load
         window.addEventListener('load', () => {
             createStars();
             setTimeout(() => {
@@ -617,5 +599,6 @@
         });
     </script>
 </body>
+
 
 </html>
